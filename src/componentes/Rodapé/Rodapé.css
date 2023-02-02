@@ -1,0 +1,13 @@
+.footer {
+    display: flex;
+    justify-content: space-around;
+    background-color: #6278F7;
+    color: #FFF;
+    padding: 40px;
+    align-items: center;
+}
+
+.footer .redes a {
+    display: inline-flex;
+    margin: 0 15px;
+}
