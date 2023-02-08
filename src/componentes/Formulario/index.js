@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Botao from "../Botao";
-import CampoTexto from "../CampoTexto";
+import Campo from "../Campo";
 import ListaSuspensa from "../ListaSuspensa";
-import "./Formulario.css"
+import "./Formulario.css";
+import { v4 as uuidv4 } from "uuid";
+
 
 const Formulario = (props) => {
 
@@ -10,10 +12,16 @@ const Formulario = (props) => {
     const [cargo, setCargo] = useState('');
     const [imagem, setImagem] = useState('');
     const [time, setTime] = useState('');
+    const [id, setId] = useState('')
+    const [nomeTime, setNomeTime] = useState('')
+    const [cor, setCor] = useState('')
+
+    const favorito = false
 
     const aoSalvar = (evento) => {
         evento.preventDefault();
-        props.aoColaboradorCadastrado({nome, cargo, imagem, time});
+        setId(uuidv4())
+        props.aoColaboradorCadastrado({nome, cargo, imagem, time, id, favorito});
         setNome('')
         setCargo('')
         setImagem('')
@@ -25,7 +33,8 @@ const Formulario = (props) => {
             <form onSubmit={aoSalvar}>
                 <h2>Preencha Os Dados Necessários</h2>
 
-                <CampoTexto 
+                <Campo
+                    type="text"
                     obrigatorio={true} 
                     label="Nome" 
                     placeholder="Digite Seu Nome"
@@ -33,7 +42,8 @@ const Formulario = (props) => {
                     aoAlterado={valor => setNome(valor)}
                 />
 
-                <CampoTexto 
+                <Campo
+                    type="text"
                     obrigatorio={true} 
                     label="Cargo" 
                     placeholder="Digite Seu Cargo"
@@ -41,7 +51,8 @@ const Formulario = (props) => {
                     aoAlterado={valor => setCargo(valor)}
                 />
 
-                <CampoTexto 
+                <Campo
+                    type="text"
                     obrigatorio={true} 
                     label="Imagem" 
                     placeholder="Digite O Endereço Da Imagem"
@@ -59,6 +70,35 @@ const Formulario = (props) => {
 
                 <Botao>
                     Criar Card
+                </Botao>
+            </form>
+
+            <form onSubmit={(evento) => {
+                evento.preventDefault()
+                props.cadastrarTime({nome: nomeTime, cor: cor})
+            }}>
+                <h2>Preencha Os Dados Necessários</h2>
+
+                <Campo 
+                    obrigatorio={true} 
+                    type="text"
+                    label="Nome" 
+                    placeholder="Digite O Nome Do Time"
+                    valor={nomeTime}
+                    aoAlterado={valor => setNomeTime(valor)}
+                />
+
+                <Campo
+                    obrigatorio={true} 
+                    type="color"
+                    label="Cor" 
+                    placeholder="Digite A Cor Do Time"
+                    valor={cor}
+                    aoAlterado={valor => setCor(valor)}
+                />
+
+                <Botao>
+                    Criar Time
                 </Botao>
             </form>
         </section>

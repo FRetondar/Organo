@@ -3,54 +3,72 @@ import Banner from './componentes/Banner/Banner';
 import Formulario from './componentes/Formulario';
 import Rodape from './componentes/Rodapé';
 import Time from './componentes/Time';
+import {v4 as uuidv4} from "uuid";
 
 function App() {
 
-  const times = [
+  const [times, setTimes] = useState([
     {
+      id: uuidv4(),
       nome: 'Programação',
-      corPrimaria: '#57C278',
-      corSecundaria: '#D9F7E9',
+      cor: '#57C278',
     },
 
     {
+      id: uuidv4(),
       nome: 'Front-End',
-      corPrimaria: '#82CFFA',
-      corSecundaria: '#E8F8FF',
+      cor: '#82CFFA',
     },
 
     {
+      id: uuidv4(),
       nome: 'Data Science',
-      corPrimaria: '#A6D157',
-      corSecundaria: 'F0F8E2',
+      cor: '#A6D157',
     },
 
     {
+      id: uuidv4(),
       nome: 'Devops',
-      corPrimaria: '#E06B69',
-      corSecundaria: 'FDE7E8',
+      cor: '#E06B69',
     },
 
     {
+      id: uuidv4(),
       nome: 'UX e Design',
-      corPrimaria: '#DB6EBF',
-      corSecundaria: '#FAE9F5',
+      cor: '#DB6EBF',
     },
 
     {
+      id: uuidv4(),
       nome: 'Mobile',
-      corPrimaria: '#FFBA05',
-      corSecundaria: '#FFF5D9',
+      cor: '#FFBA05',
     },
 
     {
+      id: uuidv4(),
       nome: 'Inovação e Gestão',
-      corPrimaria: '#FF8A29',
-      corSecundaria: 'FFEEDF',
+      cor: '#FF8A29',
     },
-  ]
+  ])
 
   const [colaboradores, setColaboradores] = useState([])
+
+  function deletarColaborador(id) {
+    setColaboradores(colaboradores.filter(colaborador => colaborador.id !== id))
+  }
+
+  function mudarCorDoTime(cor, id) {
+    setTimes(times.map(time => {
+      if(time.id === id){
+        time.cor = cor
+      }
+      return time
+    }))
+  }
+
+  const cadastrarTime = (novoTime) => {
+    setTimes([...times, {...novoTime, id: uuidv4()}])
+  }
 
   const aoNovoColaboradorAdicionado = (colaborador) =>{
 
@@ -58,17 +76,34 @@ function App() {
 
   }
 
+  function resolverFavorito(id) {
+  
+    setColaboradores(colaboradores.map(colaborador => {
+      if(colaborador.id === id) colaborador.favorito = !colaborador.favorito;
+      return colaborador
+    }))
+
+  }
+
   return (
     <div className="App">
       <Banner/>
-      <Formulario times={times.map(time => time.nome)} aoColaboradorCadastrado={colaborador => aoNovoColaboradorAdicionado(colaborador)}/>
+      <Formulario 
+      times={times.map(time => time.nome)} 
+      aoColaboradorCadastrado={colaborador => aoNovoColaboradorAdicionado(colaborador)}
+      cadastrarTime={cadastrarTime}
+      />
 
       {times.map(time => <Time 
         key={time.nome} 
+        id={time.id}
+        mudarCor={mudarCorDoTime}
         nome={time.nome} 
-        corPrimaria={time.corPrimaria} 
-        corSecundaria={time.corSecundaria}
+        corPrimaria={time.cor} 
+        corSecundaria={time.cor }
         colaboradores={colaboradores.filter(colaborador => colaborador.time === time.nome)}
+        aoDeletar={deletarColaborador}
+        aoFavoritar={resolverFavorito}
         />)}
 
       <Rodape/>
